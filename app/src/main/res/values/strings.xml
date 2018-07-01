@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="menu_sort_by">Sort By</string>
+    <string name="menu_popular">Popular</string>
+    <string name="menu_top_rated">Top Rated</string>
+    <string name="iv_poster_description">Image of the movie poster</string>
+    <string name="iv_backdrop_description">Image of the movie backdrop</string>
+    <string name="iv_star_description">Image of a star for vote average</string>
+    <string name="tv_release_date">Release Date:</string>
+    <string name="tv_placeholder_date">5–19–2018</string>
+    <string name="tv_placeholder_voteAverage">6.7</string>
+    <string name="tv_placeholder_overview">As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.</string>
+    <string name="tv_overview_label">Overview</string>
+    <string name="tv_orginal_title">Original Title</string>
+    <string name="popular">popular</string>
+    <string name="popular_toast">Movies Sorted By Popularity</string>
+    <string name="topRated">topRated</string>
+    <string name="top_rated_toast">Movies Sorted By Top Rated</string>
+    <string name="movie">movie</string>
+    <string name="no_connection">No internet connection available.</string>
+
+
+</resources>
