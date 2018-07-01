@@ -24,7 +24,7 @@ import com.mcbridebrandon.popularmovies.utilities.NetworkUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-
+//test
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private MovieAdapter mAdapter;
