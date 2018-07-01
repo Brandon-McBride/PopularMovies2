@@ -1,14 +1,19 @@
 package com.mcbridebrandon.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +22,7 @@ import android.widget.Toast;
 
 import com.mcbridebrandon.popularmovies.adapters.MovieAdapter;
 import com.mcbridebrandon.popularmovies.data.AppDatabase;
+import com.mcbridebrandon.popularmovies.model.MainViewModel;
 import com.mcbridebrandon.popularmovies.model.Movie;
 import com.mcbridebrandon.popularmovies.utilities.JsonUtils;
 import com.mcbridebrandon.popularmovies.utilities.NetworkUtils;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             error.setText(R.string.no_connection);
         }
 
+        //get database instance
         mDb = AppDatabase.getsInstance(getApplicationContext());
     }
 
@@ -128,9 +135,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
 
             return true;
+        }else if (itemThatWasClickedId == R.id.menu_favorites) {
+
+            //get favorite movies list
+            getFavoriteMovies();
+
         }
+
         return super.onOptionsItemSelected(item);
     }
+
+    private void getFavoriteMovies() {
+            MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(@Nullable List<Movie> movieEntries) {
+                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                    mAdapter.updateAdapter(movieEntries);
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+
 
     private void launchDetailsActivity(int position) {
         Movie movieToSend = this.mMovieData.get(position);//new Movie();

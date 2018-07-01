@@ -34,7 +34,7 @@ import java.net.URL;
 import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerAdapter.ItemClickListener, ReviewAdapter.ItemClickListener {
-    private static final String TAG = "Details";
+    private static final String TAG =  DetailsActivity.class.getSimpleName();
     private TrailerAdapter mAdapter;
     private Trailer[] mTrailerData;
     private ReviewAdapter mReviewAdapter;

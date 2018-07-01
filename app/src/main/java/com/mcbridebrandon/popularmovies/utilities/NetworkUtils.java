@@ -22,7 +22,7 @@ public class NetworkUtils {
     //param for api key
     private final static String PARAM_API_KEY = "api_key";
     //insert your api key here
-    private final static String API_KEY = "PLACE API KEY HERE";
+    private final static String API_KEY = "";
 
     //get popular movies
     private final static String POPULAR = "popular";
