@@ -18,7 +18,7 @@ public interface MovieDao {
 
 
     @Query("SELECT * FROM movies WHERE id LIKE :mId")
-    Movie queryMovieById(int mId);
+    Movie queryMovieById(String mId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie movie);
