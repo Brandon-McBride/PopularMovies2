@@ -34,6 +34,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private MovieAdapter mAdapter;
+    private MovieAdapter fAdapter;
     private List<Movie> mMovieData;
     private AppDatabase mDb;
 
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             int numberOfColumns = 2;
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
             mAdapter = new MovieAdapter(this, mMovieData, this);
-            //adapter.setClickListener(this);
             mRecyclerView.setAdapter(mAdapter);
 
             //Query The Movie Database using popular as the default sorting
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     // COMPLETED (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
-    private class MovieQueryTask extends AsyncTask<URL, Void, String> {
+    private  class MovieQueryTask extends AsyncTask<URL, Void, String> {
         //private Movie[] mMovieData;
         //Override the doInBackground method to perform the query. Return the results.
         @Override
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.menu_popular) {
+
             Context context = MainActivity.this;
             makeMovieSearchQuery(getString(R.string.popular));
             String textToShow = getString(R.string.popular_toast);
@@ -128,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
             return true;
         } else if (itemThatWasClickedId == R.id.menu_top_rated) {
-            Context context = MainActivity.this;
 
+            Context context = MainActivity.this;
             makeMovieSearchQuery(getString(R.string.topRated));
             String textToShow = getString(R.string.top_rated_toast);
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
@@ -139,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
             //get favorite movies list
             getFavoriteMovies();
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
                 @Override
                 public void onChanged(@Nullable List<Movie> movieEntries) {
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel" + movieEntries);
                     mAdapter.updateAdapter(movieEntries);
                     mAdapter.notifyDataSetChanged();
                 }

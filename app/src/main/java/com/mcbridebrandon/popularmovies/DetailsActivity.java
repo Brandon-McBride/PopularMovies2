@@ -111,7 +111,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
 
 
-
         //favorite button
         favoriteButton = findViewById(R.id.btn_favorite);
         favoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -129,54 +128,54 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
         if(favoriteButton.getText() == addFavorite)
         {
-            Double voteAverage = mMovie.getVoteAverage();
-            String id = mMovie.getId();
-            String title = mMovie.getTitle();
-            String releaseDate = mMovie.getReleaseDate();
-            String overview = mMovie.getOverview();
-            String posterPath = mMovie.getPosterPath();
-            String backdropPath = mMovie.getBackdropPath();
-
-            final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
-
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    mDb.movieDao().insertMovie(favoriteMovie);
-                }
-            });
-
+            insertMovie();
             favoriteButton.setText(removeFavorite);
-
         }else
         {
-
-
-            AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    Double voteAverage = mMovie.getVoteAverage();
-                    String id = mMovie.getId();
-                    String title = mMovie.getTitle();
-                    String releaseDate = mMovie.getReleaseDate();
-                    String overview = mMovie.getOverview();
-                    String posterPath = mMovie.getPosterPath();
-                    String backdropPath = mMovie.getBackdropPath();
-
-                    final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
-                    AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            mDb.movieDao().deleteMovie(mMovie);
-                        }
-                    });
-                }
-            });
-
+            deleteMovie();
             favoriteButton.setText(addFavorite);
         }
     }
+    private void insertMovie(){
+        Double voteAverage = mMovie.getVoteAverage();
+        String id = mMovie.getId();
+        String title = mMovie.getTitle();
+        String releaseDate = mMovie.getReleaseDate();
+        String overview = mMovie.getOverview();
+        String posterPath = mMovie.getPosterPath();
+        String backdropPath = mMovie.getBackdropPath();
 
+        final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
+
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.movieDao().insertMovie(favoriteMovie);
+            }
+        });
+    }
+    private void deleteMovie(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Double voteAverage = mMovie.getVoteAverage();
+                String id = mMovie.getId();
+                String title = mMovie.getTitle();
+                String releaseDate = mMovie.getReleaseDate();
+                String overview = mMovie.getOverview();
+                String posterPath = mMovie.getPosterPath();
+                String backdropPath = mMovie.getBackdropPath();
+
+                final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDb.movieDao().deleteMovie(mMovie);
+                    }
+                });
+            }
+        });
+    }
     private void makeTrailerSearchQuery(String id) {
         URL searchUrl = NetworkUtils.buildTrailerUrl(id);
         // Create a new MovieQueryTask and call its execute method, passing in the url to query
@@ -256,6 +255,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
             }
         }
     }
+
 
 
     //Reference https://stackoverflow.com/questions/4238921/detect-whether-there-is-an-internet-connection-available-on-android
