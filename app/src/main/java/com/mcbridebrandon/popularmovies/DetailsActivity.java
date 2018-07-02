@@ -111,6 +111,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
 
 
+
         //favorite button
         favoriteButton = findViewById(R.id.btn_favorite);
         favoriteButton.setOnClickListener(new View.OnClickListener() {
