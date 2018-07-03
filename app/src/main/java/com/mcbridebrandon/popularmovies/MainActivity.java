@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.stetho.Stetho;
 import com.mcbridebrandon.popularmovies.adapters.MovieAdapter;
 import com.mcbridebrandon.popularmovies.data.AppDatabase;
 import com.mcbridebrandon.popularmovies.model.MainViewModel;
@@ -34,6 +35,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private MovieAdapter mAdapter;
+    private RecyclerView mRecyclerView;
     private List<Movie> mMovieData;
     private AppDatabase mDb;
 
@@ -41,11 +43,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Stetho.initializeWithDefaults(this);
 
         if (isNetworkAvailable()) {
             // Set up the RecyclerView for displaying the list of movies in a grid
-            RecyclerView mRecyclerView = findViewById(R.id.rv_movie_grid);
+            mRecyclerView = findViewById(R.id.rv_movie_grid);
             int numberOfColumns = 2;
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
             mAdapter = new MovieAdapter(this, mMovieData, this);
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
         //get database instance
         mDb = AppDatabase.getsInstance(getApplicationContext());
+
     }
 
 
@@ -100,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             if (searchResults != null && !searchResults.equals("")) {
                 mMovieData = JsonUtils.parseMovieJson(searchResults);
                 mAdapter.updateAdapter(mMovieData);
-                mAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -150,9 +152,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
                 @Override
                 public void onChanged(@Nullable List<Movie> movieEntries) {
-                    Log.d(TAG, "Updating list of tasks from LiveData in ViewModel");
+                    Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
                     mAdapter.updateAdapter(movieEntries);
-                    mAdapter.notifyDataSetChanged();
                 }
             });
         }

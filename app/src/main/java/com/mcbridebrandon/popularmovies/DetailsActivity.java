@@ -127,7 +127,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         String addFavorite = "Add Favorite";
         String removeFavorite = "Remove Favorite";
 
-        if(favoriteButton.getText() == addFavorite)
+        if(favoriteButton.getText().equals(addFavorite))
         {
             insertMovie();
             favoriteButton.setText(removeFavorite);
@@ -256,8 +256,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
             }
         }
     }
-
-
 
     //Reference https://stackoverflow.com/questions/4238921/detect-whether-there-is-an-internet-connection-available-on-android
     private boolean isNetworkAvailable() {

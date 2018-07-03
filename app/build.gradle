@@ -44,4 +44,7 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+
+    //stetho remove
+    implementation 'com.facebook.stetho:stetho:1.5.0'
 }
