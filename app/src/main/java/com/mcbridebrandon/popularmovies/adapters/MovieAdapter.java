@@ -3,6 +3,7 @@ package com.mcbridebrandon.popularmovies.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
+    private static final String TAG = "MOVIE ADAPTER";
     private List<Movie> mMovieList;
     private final ItemClickListener mClickListener;
 
@@ -41,14 +43,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        //Log.d(TAG, "#" + position);
+        Log.d(TAG, "#" + position);
 
         if (mMovieList != null) {
             Picasso.get()
                     .load((mMovieList.get(position).getPosterPath()))
                     .fit()
                     .into(holder.movieImageView);
-            //Log.d(TAG, "#" + mMovieList[position].getPosterPath());
+            Log.d(TAG, "#" + mMovieList.get(position).getPosterPath());
         }
     }
 

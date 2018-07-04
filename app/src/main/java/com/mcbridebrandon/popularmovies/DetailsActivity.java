@@ -138,20 +138,10 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
     }
     private void insertMovie(){
-        Double voteAverage = mMovie.getVoteAverage();
-        String id = mMovie.getId();
-        String title = mMovie.getTitle();
-        String releaseDate = mMovie.getReleaseDate();
-        String overview = mMovie.getOverview();
-        String posterPath = mMovie.getPosterPath();
-        String backdropPath = mMovie.getBackdropPath();
-
-        final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
-
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                mDb.movieDao().insertMovie(favoriteMovie);
+                mDb.movieDao().insertMovie(mMovie);
             }
         });
     }
@@ -159,23 +149,9 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                Double voteAverage = mMovie.getVoteAverage();
-                String id = mMovie.getId();
-                String title = mMovie.getTitle();
-                String releaseDate = mMovie.getReleaseDate();
-                String overview = mMovie.getOverview();
-                String posterPath = mMovie.getPosterPath();
-                String backdropPath = mMovie.getBackdropPath();
-
-                final Movie favoriteMovie = new Movie(id,voteAverage,title,releaseDate,overview,posterPath,backdropPath);
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
                         mDb.movieDao().deleteMovie(mMovie);
                     }
                 });
-            }
-        });
     }
     private void makeTrailerSearchQuery(String id) {
         URL searchUrl = NetworkUtils.buildTrailerUrl(id);

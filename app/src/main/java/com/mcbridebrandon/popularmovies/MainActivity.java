@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private MovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<Movie> mMovieData;
+    private MovieAdapter favoriteAdapter;
     private AppDatabase mDb;
 
     @Override
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Stetho.initializeWithDefaults(this);
+        //get database instance
+        mDb = AppDatabase.getsInstance(getApplicationContext());
 
         if (isNetworkAvailable()) {
             // Set up the RecyclerView for displaying the list of movies in a grid
@@ -63,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             error.setText(R.string.no_connection);
         }
 
-        //get database instance
-        mDb = AppDatabase.getsInstance(getApplicationContext());
 
     }
 
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
             return true;
         }else if (itemThatWasClickedId == R.id.menu_favorites) {
-
+            Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
             //get favorite movies list
             getFavoriteMovies();
             return true;
