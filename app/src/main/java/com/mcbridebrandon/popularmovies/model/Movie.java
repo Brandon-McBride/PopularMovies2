@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ public class Movie implements Serializable {
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w300";
     private static final String BACKDROP_SIZE = "w780";
+    private static final String TAG = "MOVIE CLASS" ;
 
     private Double voteAverage;
     @PrimaryKey
@@ -41,8 +43,20 @@ public class Movie implements Serializable {
         this.title = title;
         this.releaseDate = releaseDate;
         this.overview = overview;
-        this.posterPath = IMAGE_BASE_URL + POSTER_SIZE + posterPath;
-        this.backdropPath = IMAGE_BASE_URL + BACKDROP_SIZE + backdropPath;
+
+        String posterSubstr = posterPath.substring(0,5);
+        String backdropSubstr = backdropPath.substring(0,5);
+        Log.d(TAG, "#" + posterSubstr);
+
+        //should do it differently maybe?
+        if(posterSubstr.equals("https") && backdropSubstr.equals("https"))
+        {
+            this.posterPath = posterPath;
+            this.backdropPath = backdropPath;
+        }else {
+            this.posterPath = IMAGE_BASE_URL + POSTER_SIZE + posterPath;
+            this.backdropPath = IMAGE_BASE_URL + BACKDROP_SIZE + backdropPath;
+        }
     }
 
     public Double getVoteAverage() {

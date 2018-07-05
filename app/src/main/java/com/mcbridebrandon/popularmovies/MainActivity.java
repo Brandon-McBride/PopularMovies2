@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     private List<Movie> mMovieData;
     private MovieAdapter favoriteAdapter;
     private AppDatabase mDb;
+    private boolean isFavorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             makeMovieSearchQuery(getString(R.string.popular));
             String textToShow = getString(R.string.popular_toast);
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-
+            isFavorite = false;
             return true;
         } else if (itemThatWasClickedId == R.id.menu_top_rated) {
             Context context = MainActivity.this;
@@ -136,12 +137,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             makeMovieSearchQuery(getString(R.string.topRated));
             String textToShow = getString(R.string.top_rated_toast);
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-
+            isFavorite = false;
             return true;
         }else if (itemThatWasClickedId == R.id.menu_favorites) {
             Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
             //get favorite movies list
             getFavoriteMovies();
+            isFavorite = true;
             return true;
         }
 
@@ -161,7 +163,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
 
     private void launchDetailsActivity(int position) {
-        Movie movieToSend = this.mMovieData.get(position);//new Movie();
+       Movie movieToSend;
+        //if a favorite item is clicked
+        //need to handle
+        if (isFavorite) {
+            MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            LiveData<List<Movie>> movies = viewModel.getMovies();
+            movieToSend = movies.getValue().get(position);//new Movie();
+        }else{
+            movieToSend = this.mMovieData.get(position);
+        }
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(getString(R.string.movie), movieToSend);
         startActivity(intent);
