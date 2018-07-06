@@ -35,6 +35,8 @@ import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerAdapter.ItemClickListener, ReviewAdapter.ItemClickListener {
     private static final String TAG =  DetailsActivity.class.getSimpleName();
+    private static final String ADDFAVORITE = "Add Favorite";
+    private static final String REMOVEFAVORITE = "Remove Favorite";
     private TrailerAdapter mAdapter;
     private Trailer[] mTrailerData;
     private ReviewAdapter mReviewAdapter;
@@ -114,6 +116,21 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
         //favorite button
         favoriteButton = findViewById(R.id.btn_favorite);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Movie movie = mDb.movieDao().queryMovieById(mMovie.getId());
+                isFavorite = movie != null;
+                Log.d(TAG, "!!!!!!" + (movie != null));
+                if(isFavorite)
+                {
+                    favoriteButton.setText(REMOVEFAVORITE);
+                }
+            }
+        });
+
+
+
         favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,17 +141,16 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     }
 
     private void setAsFavorite() {
-        String addFavorite = "Add Favorite";
-        String removeFavorite = "Remove Favorite";
 
-        if(favoriteButton.getText().equals(addFavorite))
+
+        if(favoriteButton.getText().equals(ADDFAVORITE))
         {
             insertMovie();
-            favoriteButton.setText(removeFavorite);
+            favoriteButton.setText(REMOVEFAVORITE);
         }else
         {
             deleteMovie();
-            favoriteButton.setText(addFavorite);
+            favoriteButton.setText(ADDFAVORITE);
         }
     }
     private void insertMovie(){

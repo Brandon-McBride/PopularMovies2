@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
             LiveData<List<Movie>> movies = viewModel.getMovies();
             movieToSend = movies.getValue().get(position);//new Movie();
+
         }else{
             movieToSend = this.mMovieData.get(position);
         }
