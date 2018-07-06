@@ -52,6 +52,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        setTitle("Movie Details");
 
         //initialize db
         mDb = AppDatabase.getsInstance(getApplicationContext());

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
 
             //Query The Movie Database using popular as the default sorting
             makeMovieSearchQuery("popular");
+            setTitle("Popular");
         } else {
             //If there is no connection display an error in a textview
             TextView error = findViewById(R.id.tv_no_connection);
@@ -126,24 +128,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
         int itemThatWasClickedId = item.getItemId();
         if (itemThatWasClickedId == R.id.menu_popular) {
             Context context = MainActivity.this;
+            isFavorite = false;
             makeMovieSearchQuery(getString(R.string.popular));
             String textToShow = getString(R.string.popular_toast);
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-            isFavorite = false;
+            setTitle("Popular");
             return true;
         } else if (itemThatWasClickedId == R.id.menu_top_rated) {
             Context context = MainActivity.this;
-
+            isFavorite = false;
             makeMovieSearchQuery(getString(R.string.topRated));
             String textToShow = getString(R.string.top_rated_toast);
             Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-            isFavorite = false;
+            setTitle("Top Rated");
             return true;
         }else if (itemThatWasClickedId == R.id.menu_favorites) {
             Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
+            isFavorite = true;
             //get favorite movies list
             getFavoriteMovies();
-            isFavorite = true;
+            setTitle("Favorites");
             return true;
         }
 
@@ -151,15 +155,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     private void getFavoriteMovies() {
+
             MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
             viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
                 @Override
                 public void onChanged(@Nullable List<Movie> movieEntries) {
                     Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
-                    mAdapter.updateAdapter(movieEntries);
+                   if(isFavorite){
+                       mAdapter.updateAdapter(movieEntries);
+                   }
+
                 }
             });
         }
+
 
 
     private void launchDetailsActivity(int position) {
@@ -189,5 +198,11 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 }
