@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -34,22 +35,32 @@ import java.net.URL;
 import java.util.List;
 //test
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
+
+    //Constants
     private static final String TAG = MainActivity.class.getSimpleName();
+    private final static String POPULAR_MOVIES = "Popular";
+    private final static String TOP_RATED_MOVIES = "Top Rated";
+    private final static String FAVORITE_MOVIES = "Favorite";
+    //Global variables
     private MovieAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<Movie> mMovieData;
     private MovieAdapter favoriteAdapter;
     private AppDatabase mDb;
     private boolean isFavorite = false;
+    //variable to keep track which sort the user is currently on
+    private final static String KEY_LIST_STATE = "list_state";
+    private final static String KEY_LAST_SCREEN = "last_screen";
+    private Parcelable rvState;
+    private String lastScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
         //get database instance
         mDb = AppDatabase.getsInstance(getApplicationContext());
-
         if (isNetworkAvailable()) {
             // Set up the RecyclerView for displaying the list of movies in a grid
             mRecyclerView = findViewById(R.id.rv_movie_grid);
@@ -59,17 +70,40 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             //adapter.setClickListener(this);
             mRecyclerView.setAdapter(mAdapter);
 
+
+            if(savedInstanceState != null) {
+            rvState = savedInstanceState.getParcelable(KEY_LIST_STATE);
+            lastScreen = savedInstanceState.getString(KEY_LAST_SCREEN);
+            if (lastScreen != null) {
+                switch ((lastScreen)) {
+                    case POPULAR_MOVIES:
+                        setTitle(POPULAR_MOVIES);
+                        makeMovieSearchQuery(getString(R.string.popular));
+                        break;
+                    case TOP_RATED_MOVIES:
+                        makeMovieSearchQuery(getString(R.string.topRated));
+                        setTitle(TOP_RATED_MOVIES);
+                        break;
+                    case FAVORITE_MOVIES:
+                        isFavorite = true;
+                        setTitle(FAVORITE_MOVIES);
+                        getFavoriteMovies();
+                        break;
+                }
+            }
+        }else
+        {
             //Query The Movie Database using popular as the default sorting
-            makeMovieSearchQuery("popular");
-            setTitle("Popular");
+            setTitle(POPULAR_MOVIES);
+            makeMovieSearchQuery(getString(R.string.popular));
+        }
+
         } else {
             //If there is no connection display an error in a textview
             TextView error = findViewById(R.id.tv_no_connection);
             error.setVisibility(View.VISIBLE);
             error.setText(R.string.no_connection);
         }
-
-
     }
 
 
@@ -107,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
             if (searchResults != null && !searchResults.equals("")) {
                 mMovieData = JsonUtils.parseMovieJson(searchResults);
                 mAdapter.updateAdapter(mMovieData);
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(rvState);
             }
         }
     }
@@ -126,63 +161,65 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
-        if (itemThatWasClickedId == R.id.menu_popular) {
-            Context context = MainActivity.this;
-            isFavorite = false;
-            makeMovieSearchQuery(getString(R.string.popular));
-            String textToShow = getString(R.string.popular_toast);
-            Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-            setTitle("Popular");
-            return true;
-        } else if (itemThatWasClickedId == R.id.menu_top_rated) {
-            Context context = MainActivity.this;
-            isFavorite = false;
-            makeMovieSearchQuery(getString(R.string.topRated));
-            String textToShow = getString(R.string.top_rated_toast);
-            Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
-            setTitle("Top Rated");
-            return true;
-        }else if (itemThatWasClickedId == R.id.menu_favorites) {
-            Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
-            isFavorite = true;
-            //get favorite movies list
-            getFavoriteMovies();
-            setTitle("Favorites");
-            return true;
-        }
 
-        return super.onOptionsItemSelected(item);
+        //Get context for showing a toast message
+        Context context = MainActivity.this;
+        //Tost message to show user
+        String textToShow;
+
+        switch (item.getItemId()) {
+            case R.id.menu_popular:
+                isFavorite = false;
+                lastScreen = POPULAR_MOVIES;
+                setTitle(POPULAR_MOVIES);
+                makeMovieSearchQuery(getString(R.string.popular));
+                textToShow = getString(R.string.popular_toast);
+                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_top_rated:
+                isFavorite = false;
+                lastScreen = TOP_RATED_MOVIES;
+                setTitle(TOP_RATED_MOVIES);
+                makeMovieSearchQuery(getString(R.string.topRated));
+                textToShow = getString(R.string.top_rated_toast);
+                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_favorites:
+                isFavorite = true;
+                lastScreen = FAVORITE_MOVIES;
+                setTitle(FAVORITE_MOVIES);
+                //get favorite movies list
+                getFavoriteMovies();
+                textToShow = getString(R.string.favorite_toast);
+                Toast.makeText(context, textToShow, Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getFavoriteMovies() {
-
             MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
             viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
                 @Override
                 public void onChanged(@Nullable List<Movie> movieEntries) {
-                    Log.d(TAG, "Updating list of Movies from LiveData in ViewModel");
                    if(isFavorite){
                        mAdapter.updateAdapter(movieEntries);
                    }
-
                 }
             });
         }
 
-
-
     private void launchDetailsActivity(int position) {
        Movie movieToSend;
-        //if a favorite item is clicked
-        //need to handle
         if (isFavorite) {
             MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
             LiveData<List<Movie>> movies = viewModel.getMovies();
             movieToSend = movies.getValue().get(position);//new Movie();
-
         }else{
             movieToSend = this.mMovieData.get(position);
         }
+        lastScreen = getTitle().toString();
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(getString(R.string.movie), movieToSend);
         startActivity(intent);
@@ -201,8 +238,31 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Item
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        //get the recyclerview state
+        rvState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(KEY_LIST_STATE, rvState);
+        //get the last sort/screen the app was on
+        outState.putString(KEY_LAST_SCREEN,String.valueOf(getTitle()) );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //Retrieve previous state
+        if (savedInstanceState != null){
+            //recyclerview state
+            rvState = savedInstanceState.getParcelable(KEY_LIST_STATE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (rvState != null){
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(rvState);
+        }
     }
 }

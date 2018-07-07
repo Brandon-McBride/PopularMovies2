@@ -87,6 +87,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
 
         }
 
+
         if (isNetworkAvailable()) {
             // set up the Traielr RecyclerView
             RecyclerView mRecyclerView = findViewById(R.id.rv_trailer_grid);
@@ -260,4 +261,5 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
 }

@@ -16,6 +16,7 @@
     <string name="popular_toast">Movies Sorted By Popularity</string>
     <string name="topRated">topRated</string>
     <string name="top_rated_toast">Movies Sorted By Top Rated</string>
+    <string name="favorite_toast">Movies Sorted By Favorites</string>
     <string name="movie">movie</string>
     <string name="no_connection">No internet connection available.</string>
     <string name="menu_favorites">favorites</string>
