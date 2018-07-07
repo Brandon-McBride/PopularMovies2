@@ -1,7 +1,6 @@
 package com.mcbridebrandon.popularmovies.utilities;
 
 
-import android.nfc.Tag;
 import android.util.Log;
 
 import com.mcbridebrandon.popularmovies.model.Movie;

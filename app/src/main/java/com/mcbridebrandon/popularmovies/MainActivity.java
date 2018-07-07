@@ -9,20 +9,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.stetho.Stetho;
 import com.mcbridebrandon.popularmovies.adapters.MovieAdapter;
 import com.mcbridebrandon.popularmovies.data.AppDatabase;
 import com.mcbridebrandon.popularmovies.model.MainViewModel;
@@ -37,7 +34,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MovieAdapter.ItemClickListener {
 
     //Constants
-    private static final String TAG = MainActivity.class.getSimpleName();
     private final static String POPULAR_MOVIES = "Popular";
     private final static String TOP_RATED_MOVIES = "Top Rated";
     private final static String FAVORITE_MOVIES = "Favorite";

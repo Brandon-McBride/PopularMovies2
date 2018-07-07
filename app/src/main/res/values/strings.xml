@@ -20,6 +20,13 @@
     <string name="movie">movie</string>
     <string name="no_connection">No internet connection available.</string>
     <string name="menu_favorites">favorites</string>
+    <string name="author">Author</string>
+    <string name="review_text_here">This is the review text here.</string>
+    <string name="add_favorite">Add Favorite</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailer_image_description">trailer image from youtube</string>
+    <string name="trailer_title">Trailer Title</string>
 
 
 </resources>

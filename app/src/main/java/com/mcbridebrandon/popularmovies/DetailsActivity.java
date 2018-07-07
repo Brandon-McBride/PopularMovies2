@@ -6,18 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mcbridebrandon.popularmovies.adapters.MovieAdapter;
 import com.mcbridebrandon.popularmovies.adapters.ReviewAdapter;
 import com.mcbridebrandon.popularmovies.adapters.TrailerAdapter;
 import com.mcbridebrandon.popularmovies.data.AppDatabase;
@@ -34,7 +31,6 @@ import java.net.URL;
 import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity implements TrailerAdapter.ItemClickListener, ReviewAdapter.ItemClickListener {
-    private static final String TAG =  DetailsActivity.class.getSimpleName();
     private static final String ADDFAVORITE = "Add Favorite";
     private static final String REMOVEFAVORITE = "Remove Favorite";
     private TrailerAdapter mAdapter;
@@ -43,7 +39,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     private Review[] mReviewData;
     private Movie mMovie;
     private Boolean isFavorite = false;
-    Button favoriteButton;
+    private Button favoriteButton;
 
     private AppDatabase mDb;
 
@@ -123,7 +119,6 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
             public void run() {
                 Movie movie = mDb.movieDao().queryMovieById(mMovie.getId());
                 isFavorite = movie != null;
-                Log.d(TAG, "!!!!!!" + (movie != null));
                 if(isFavorite)
                 {
                     favoriteButton.setText(REMOVEFAVORITE);
